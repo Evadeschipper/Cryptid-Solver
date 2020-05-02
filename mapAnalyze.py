@@ -113,11 +113,15 @@ def mapAnalyze(mapInstructions, structures):
             else:
                 tile[hint[0]+"/"+hint[1]] = False
 
-    # Mistake occuring below. Fix. 
     for hint in distancehints:
         Map = distance(Map, hint[0], hint[1])
 
     return Map
+
+hints = ('forest/desert', 'forest/water', 'forest/swamp', 'forest/mountain', 'desert/water', 
+         'desert/swamp', 'desert/mountain', 'water/swamp', 'water/mountain', 'swamp/mountain', 
+         '1forest', '1desert', '1swamp', '1mountain', '1water', '1animal', 
+         '2standing stone', '2abandoned shack', '2cougar', '2bear', '3blue', '3white', '3green')
 
 if __name__ == "__main__":
 
