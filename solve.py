@@ -21,13 +21,9 @@ def possibleCombinations(knownhints, nTeams):
 
     possibleCombinations = []
 
-    # For each unknown team, go through the list of hints. Make that many combinations.
-    # The knownhints are fixed, so those will not go to the amount of options. 
-    # Example: if 3 teams are unknown, the number of options will be 23^3 = 12167.
-
     # make a combination of hints. 
     # Check for that combination how many hexagons on the map are possible. 
-    # If this is not one, continue. 
+    # If this is not 1, continue. 
     # If this is 1, add the combination to a list of possible combinations. 
 
     for hint in hints:
