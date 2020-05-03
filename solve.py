@@ -5,6 +5,7 @@ from mapAnalyze import mapAnalyze, hints
 def testCombination(combination, Map):
 
     nTiles = 0
+    Tiles = []
 
     for tile in Map:
         meetsConditions = []
@@ -14,12 +15,14 @@ def testCombination(combination, Map):
         
         if all(meetsConditions):
             nTiles += 1
+            Tiles.append({'x': tile['x'], 'y': tile['y']})
 
-    return nTiles
+    return nTiles, Tiles
 
 def possibleCombinations(knownhints, nTeams):
 
-    possibleCombinations = []
+    possibleCombinations = {}
+    tempCombinations = {}
 
     # make a combination of hints. 
     # Check for that combination how many hexagons on the map are possible. 
@@ -36,29 +39,33 @@ def possibleCombinations(knownhints, nTeams):
 
                         if (nTeams - len(knownhints) > 3):
                             for hint4 in hints:
+
                                 combi = knownhints + [hint, hint2, hint3, hint4]
-                                nTileOptions = testCombination(combi, Map)
+                                nTileOptions, Tiles = testCombination(combi, Map)
                                 if nTileOptions == 1:
-                                    possibleCombinations.append(combi)
+                                    tempCombinations[tuple(sorted(combi))] = Tiles
                         else:
                             combi = knownhints + [hint, hint2, hint3]
-                            nTileOptions = testCombination(combi, Map)
+                            nTileOptions, Tiles = testCombination(combi, Map)
                             if nTileOptions == 1:
-                                possibleCombinations.append(combi)
+                                tempCombinations[tuple(sorted(combi))] = Tiles
                 else:
                     combi = knownhints + [hint, hint2]
-                    nTileOptions = testCombination(combi, Map)
+                    nTileOptions, Tiles = testCombination(combi, Map)
                     if nTileOptions == 1:
-                        possibleCombinations.append(combi)
+                        tempCombinations[tuple(sorted(combi))] = Tiles
         else:
             combi = knownhints + [hint]
-            nTileOptions = testCombination(combi, Map)
+            nTileOptions, Tiles = testCombination(combi, Map)
             if nTileOptions == 1:
-                possibleCombinations.append(combi)
+                tempCombinations[tuple(sorted(combi))] = Tiles
 
     # Only keep distinct combinations. 
-    possibleCombinations = list(map(sorted, possibleCombinations))
-    possibleCombinations = [list(item) for item in set(tuple(row) for row in possibleCombinations)]
+    uniqueCombinations = list(map(sorted, tempCombinations))
+    uniqueCombinations = [list(item) for item in set(tuple(row) for row in uniqueCombinations)]
+
+    for combi in uniqueCombinations:
+        possibleCombinations[tuple(combi)] = tempCombinations[tuple(combi)]
 
     return possibleCombinations
 
