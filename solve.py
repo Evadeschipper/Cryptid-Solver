@@ -1,6 +1,7 @@
 
 from card import mapInstructions, structures
 from mapAnalyze import mapAnalyze, hints
+from collections import defaultdict
 
 def testCombination(combination, Map):
 
@@ -43,22 +44,22 @@ def possibleCombinations(knownhints, nTeams):
                                 combi = knownhints + [hint, hint2, hint3, hint4]
                                 nTileOptions, Tiles = testCombination(combi, Map)
                                 if nTileOptions == 1:
-                                    tempCombinations[tuple(sorted(combi))] = Tiles
+                                    tempCombinations[tuple(sorted(combi))] = Tiles[0]
                         else:
                             combi = knownhints + [hint, hint2, hint3]
                             nTileOptions, Tiles = testCombination(combi, Map)
                             if nTileOptions == 1:
-                                tempCombinations[tuple(sorted(combi))] = Tiles
+                                tempCombinations[tuple(sorted(combi))] = Tiles[0]
                 else:
                     combi = knownhints + [hint, hint2]
                     nTileOptions, Tiles = testCombination(combi, Map)
                     if nTileOptions == 1:
-                        tempCombinations[tuple(sorted(combi))] = Tiles
+                        tempCombinations[tuple(sorted(combi))] = Tiles[0]
         else:
             combi = knownhints + [hint]
             nTileOptions, Tiles = testCombination(combi, Map)
             if nTileOptions == 1:
-                tempCombinations[tuple(sorted(combi))] = Tiles
+                tempCombinations[tuple(sorted(combi))] = Tiles[0]
 
     # Only keep distinct combinations. 
     uniqueCombinations = list(map(sorted, tempCombinations))
@@ -69,13 +70,32 @@ def possibleCombinations(knownhints, nTeams):
 
     return possibleCombinations
 
+def hexProbs(possibleCombinations):
+
+    counts = defaultdict(int)
+    for coordinate in possibleCombinations.values():
+        counts[str(coordinate)] += 1
+
+    probs = {}
+    nCombi = len(possibleCombinations)
+
+    for key in counts:
+        probs[key] = counts[key] / nCombi
+
+    probs = {k: v for k, v in sorted(probs.items(), key=lambda item: item[1])}
+    return probs
+
 if __name__ == "__main__":
 
     Map = mapAnalyze(mapInstructions, structures)
 
-    nTeams = 3
-    knownhints = ['water/mountain']
+    # nTeams = 3
+    # knownhints = ['water/mountain']
+   
+    nTeams = 4
+    knownhints = ['1animal', 'desert/swamp', '3blue', '1desert']
 
-    test = possibleCombinations(knownhints, nTeams)
+    leftCombinations = possibleCombinations(['3blue', '1desert'], nTeams)
+    test = hexProbs(leftCombinations)
     print(test)
 
