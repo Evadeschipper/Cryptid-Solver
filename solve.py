@@ -1,7 +1,7 @@
 
 from card import mapInstructions, structures
 from mapAnalyze import mapAnalyze, hints
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 def testCombination(combination, Map):
 
@@ -73,8 +73,10 @@ def possibleCombinations(knownhints, nTeams):
 def hexProbs(possibleCombinations):
 
     counts = defaultdict(int)
+    Tile = namedtuple('Tile', ['x', 'y'])
+
     for coordinate in possibleCombinations.values():
-        counts[str(coordinate)] += 1
+        counts[Tile(coordinate['x'], coordinate['y'])] += 1
 
     probs = {}
     nCombi = len(possibleCombinations)
